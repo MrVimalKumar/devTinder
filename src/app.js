@@ -2,15 +2,18 @@ const express = require('express')
 
 const app = express();
 
-app.use("/",(req,res)=>{
-    res.send("Dev Tinder Dashboard")
+app.get("/user",(req,res)=>{
+    res.send({firstname:"Vimal",lastname:"kumar"});
 })
 
-app.use("/test",(req,res)=>{
-    res.send("Testing Dev Tinder ")
+app.post("/user",(req,res)=>{
+    // Saved Data to Database.
+    res.send("Data saved in Database Successfully...")
 })
-app.use("/test1",(req,res)=>{
-    res.send("Testing Dev Tinder API 1")
+
+app.delete("/user",(req,res)=>{
+    // Saved Data to Database.
+    res.send("Data is deleted in database")
 })
 
 app.listen(3000, ()=>{
