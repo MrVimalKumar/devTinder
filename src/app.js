@@ -2,18 +2,21 @@ const express = require('express')
 
 const app = express();
 
-app.get("/user",(req,res)=>{
-    res.send({firstname:"Vimal",lastname:"kumar"});
-})
-
-app.post("/user",(req,res)=>{
-    // Saved Data to Database.
-    res.send("Data saved in Database Successfully...")
-})
-
-app.delete("/user",(req,res)=>{
-    // Saved Data to Database.
-    res.send("Data is deleted in database")
+app.get("/user",(req,res,next)=>{
+    // res.send({firstname:"Vimal",lastname:"kumar"});
+    next();
+},(req,res,next)=>{
+    console.log("This is 2nd route handler")
+    next();
+},(req,res,next)=>{
+   console.log("3rd Route handler") 
+   next();
+},(req,res,next)=>{
+    console.log("4th route handler")
+    next();
+},(req,res,next)=>{
+    console.log("5th route handler")
+    res.send("Response from 5th route handler ")
 })
 
 app.listen(3000, ()=>{
