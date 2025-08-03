@@ -2,21 +2,28 @@ const express = require('express')
 
 const app = express();
 
-app.get("/user",(req,res,next)=>{
-    // res.send({firstname:"Vimal",lastname:"kumar"});
-    next();
-},(req,res,next)=>{
-    console.log("This is 2nd route handler")
-    next();
-},(req,res,next)=>{
-   console.log("3rd Route handler") 
-   next();
-},(req,res,next)=>{
-    console.log("4th route handler")
-    next();
-},(req,res,next)=>{
-    console.log("5th route handler")
-    res.send("Response from 5th route handler ")
+const {adminAuth,userAuth} = require('./middleware/auth')
+
+app.use("/admin", adminAuth)
+
+app.post("/user/login",(req,res)=>{
+    res.send("Login Sucess")
+})
+
+app.get("/user/getdata",userAuth,(req,res)=>{
+    res.send("Get all the Data");
+})
+
+app.delete("/user/deletedata",userAuth,(req,res)=>{
+    res.send("Deleted the data");
+})
+
+app.get("/admin/getdata",(req,res)=>{
+    res.send("Get all the Data");
+})
+
+app.delete("/admin/deletedata",(req,res)=>{
+    res.send("Deleted the data");
 })
 
 app.listen(3000, ()=>{
