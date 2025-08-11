@@ -37,6 +37,27 @@ app.get("/users", async (req,res)=>{
     }
 })
 
+// Delete the Particular user from DB.
+app.delete("/user",async (req,res)=>{
+     const deleteuserEmail = req.body.email
+     try{
+        const user = await User.findOneAndDelete(deleteuserEmail)
+        res.send("User Deleted Successfully")
+     }catch(err){
+        res.status(400).send("Something went wrong")
+     }
+})
+
+// update the user data by using email
+app.patch("/user",async (req,res)=>{
+    const userEmail = req.body.email
+    const data = req.body
+    const user = await User.findOneAndUpdate({email:userEmail},data, {returnDocument:"after", runValidators:true})
+    console.log(user)
+    res.send("User Updated")
+
+})
+
 connectDB().then(()=>{
     console.log("Database Connected Successfully");
     app.listen(3000, ()=>{
