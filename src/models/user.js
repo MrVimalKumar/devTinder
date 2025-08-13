@@ -1,4 +1,5 @@
 const {Schema,model} = require('mongoose')
+const validator = require('validator')
 
 
 const userSchema = new Schema({
@@ -18,10 +19,20 @@ const userSchema = new Schema({
         unique:true,
         lowercase:true,
         trim:true,
+        validate(value){
+            if(! validator.isEmail(value)){
+                throw new Error("Invalid Email "+ value)
+            }
+        }
     },
     photoUrl:{
         type:"String",
         default:"https://www.clipartmax.com/middle/m2H7G6H7K9H7H7A0_admin-blank-user-profile/",
+        validate(value){
+            if(!validator.isURL(value)){
+                throw new Errror("Invalid URL"+ value)
+            }
+        }
     },
     password:{
         type:String

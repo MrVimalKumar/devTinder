@@ -14,7 +14,7 @@ app.post("/signup", async (req,res)=>{
     await user.save();
         res.send("Data saved in DB Successfully")
     }catch(err){
-        res.status(400).send("Data is not saved")
+        res.status(400).send("Data is not saved"+err.message)
     }
 })
 // Get one user by Email
@@ -49,12 +49,22 @@ app.delete("/user",async (req,res)=>{
 })
 
 // update the user data by using email
-app.patch("/user",async (req,res)=>{
-    const userEmail = req.body.email
+app.patch("/user/:userEmail",async (req,res)=>{
+    const userEmail = req.params.userEmail
     const data = req.body
+ try{
+    const Allowed_Updates = ["photoUrl","about","gender","age","skills"]
+    const isUpdatedAllowed = Object.keys(data).every((k)=>Allowed_Updates.includes(k))
+    if(!isUpdatedAllowed){
+        throw new Error("Update not allowed")
+    }
     const user = await User.findOneAndUpdate({email:userEmail},data, {returnDocument:"after", runValidators:true})
     console.log(user)
     res.send("User Updated")
+ }catch(err){
+    res.status(400).send("Update Failed : "+ err.message )
+ }
+    
 
 })
 
