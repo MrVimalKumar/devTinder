@@ -1,6 +1,9 @@
 const express = require('express')
 const {User}=require("./models/user")
 const {connectDB} = require('./Config/database')
+const {validateSignUpData} = require('./utlis/validation')
+const bcrypt = require('bcrypt')
+const validator = require('validator')
 
 const app = express();
 
@@ -8,15 +11,55 @@ const app = express();
 // This helps to convert all the json to javascript objects
 app.use(express.json())
 
+// SignUp API
 app.post("/signup", async (req,res)=>{
-    const user = new User(req.body)
+    const {firstName,lastName,email,password}=req.body
     try{
-    await user.save();
-        res.send("Data saved in DB Successfully")
+        // validate the Data
+         validateSignUpData(req)
+        //  Encrypting the password
+        const passwordHash = await bcrypt.hash(password,10)
+        // Creating a New User instance & storing new user in DB
+        const user = new User({
+            firstName,
+            lastName,
+            email,
+            password : passwordHash,
+        })
+        await user.save();
+        res.send("SignUp Successfull")
     }catch(err){
-        res.status(400).send("Data is not saved"+err.message)
+        res.status(400).send("ERROR : " + err.message)
     }
 })
+
+// Login API
+app.post("/login",async (req,res)=>{
+    const {email,password}= req.body
+    try{
+
+    if(!validator.isEmail(email)){
+        throw new Error("Enter the valid Email")
+    }
+    const user = await User.findOne({email:email})
+    if(!user){
+        throw new Error("Invalid Credentials")
+    }
+    // Comparing the passwords using bcrypt
+    const isPasswordValid = await bcrypt.compare(password,user.password)
+
+    if(isPasswordValid){
+        res.send("Login Successfull")
+    }else{
+        throw new Error("Invalid Credentials")
+    }
+    }
+    catch(err){
+        res.status(400).send("ERROR : "+ err.message)
+    }
+    
+})
+
 // Get one user by Email
 app.get("/user",async (req,res)=>{
     const userEmail = req.body.email
