@@ -1,25 +1,25 @@
-const adminAuth = (req,res,next)=>{
-    const token = "xyz"
-    const isAuthenticated = token === "xyz"
-    if(!isAuthenticated){
-        res.status(401).send("Not having access")
-    }
-    else{
-        next();
-    }
-}
+const jwt = require('jsonwebtoken')
+const {User}=require('../models/user')
 
-const userAuth = (req,res,next)=>{
-    const token = "xyz"
-    const isAuthenticated = token === "xyz"
-    if(!isAuthenticated){
-        res.status(401).send("Not having access")
+const userAuth = async(req,res,next)=>{
+   try{
+    const {token}=req.cookies;
+    if(!token){
+        throw new Error("Invalid Token")
     }
-    else{
-        next();
+    const decodedData = await jwt.verify(token,"DevTINDER@123")
+    const {_id} = decodedData
+     const user = await User.findById(_id);
+    if(!user){
+        throw new Error("user doesn't exit")
     }
+    req.user = user
+    next()
+    }catch(err){
+    res.status(400).send("ERROR : " + err.message)
+   }    
 }
 
 module.exports={
-    adminAuth,userAuth
+    userAuth
 }
