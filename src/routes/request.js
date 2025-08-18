@@ -40,7 +40,6 @@ requestRouter.post("/request/send/:status/:toUserId",userAuth,async(req,res)=>{
             })
         }
 
-
         const connections = new ConnectionRequestModel({
                 fromUserId,
                 toUserId,
