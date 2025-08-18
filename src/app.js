@@ -10,11 +10,13 @@ const {requestRouter}= require('./routes/request')
 
 // Middleware which is needed for all the API to read Body
 // This helps to convert all the json to javascript objects
+
 app.use(express.json())
 app.use(cookieParser())
 
 app.use("/",authRouter)
 app.use("/", profileRouter)
+app.use("/",requestRouter)
 
 connectDB().then(()=>{
     console.log("Database Connected Successfully");
