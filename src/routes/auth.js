@@ -21,8 +21,12 @@ authRouter.post("/signup", async (req,res)=>{
             email,
             password : passwordHash,
         })
-        await user.save();
-        res.send("SignUp Successfull")
+        const savedUser = await user.save();
+        const token = await jwt.sign({_id:savedUser._id},"DevTINDER@123",{expiresIn:'1h'})
+        res.cookie("token",token)
+        res.json({message:"SignUp Successfull",
+            data:savedUser
+        })
     }catch(err){
         res.status(400).send("ERROR : " + err.message)
     }
@@ -46,7 +50,10 @@ authRouter.post("/login",async (req,res)=>{
     if(isPasswordValid){
         const token = await jwt.sign({_id:user._id},"DevTINDER@123",{expiresIn:'1h'})
         res.cookie("token",token) 
-        res.send("Login Successfull")
+        res.json({
+            message:"Logged In Successfull",
+            data : user
+        })
     }else{
         throw new Error("Invalid Credentials")
     }
