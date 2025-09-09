@@ -25,11 +25,7 @@ authRouter.post("/signup", async (req, res) => {
     const token = await jwt.sign({ _id: savedUser._id },process.env.JWT_SECRET , {
       expiresIn: "1h",
     });
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: true, // only send over https
-      sameSite: "None", // allow cross-site cookie
-    });
+    res.cookie("token", token);
 
     res.json({ message: "SignUp Successfull", data: savedUser });
   } catch (err) {
@@ -55,12 +51,7 @@ authRouter.post("/login", async (req, res) => {
       const token = await jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
-      res.cookie("token", token, {
-        httpOnly: true,
-        secure: true, // only send over https
-        sameSite: "None", // allow cross-site cookie
-      });
-
+      res.cookie("token", token);
       res.json({
         message: "Logged In Successfull",
         data: user,
