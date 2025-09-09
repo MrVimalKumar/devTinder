@@ -15,7 +15,7 @@ const {userRouter}= require('./routes/user')
 // This helps to convert all the json to javascript objects
 
 app.use(cors({
-    origin:"https://dev-tinder-web-bice-kappa.vercel.app",
+    origin:"https://devtinder-web-wrqj.onrender.com",
     credentials:true,
 }))
 app.use(express.json())
