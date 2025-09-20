@@ -22,7 +22,7 @@ authRouter.post("/signup", async (req,res)=>{
             password : passwordHash,
         })
         const savedUser = await user.save();
-        const token = await jwt.sign({_id:savedUser._id},"DevTINDER@123",{expiresIn:'1h'})
+        const token = await jwt.sign({_id:savedUser._id},process.env.JWT_SECRET,{expiresIn:'1h'})
         res.cookie("token",token)
         res.json({message:"SignUp Successfull",
             data:savedUser
@@ -48,7 +48,7 @@ authRouter.post("/login",async (req,res)=>{
     const isPasswordValid = await bcrypt.compare(password,user.password)
 
     if(isPasswordValid){
-        const token = await jwt.sign({_id:user._id},"DevTINDER@123",{expiresIn:'1h'})
+        const token = await jwt.sign({_id:user._id},process.env.JWT_SECRET,{expiresIn:'1h'})
         res.cookie("token",token) 
         res.json({
             message:"Logged In Successfull",
