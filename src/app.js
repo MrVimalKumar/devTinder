@@ -11,11 +11,8 @@ const {profileRouter}=require('./routes/profile')
 const {requestRouter}= require('./routes/request')
 const {userRouter}= require('./routes/user')
 
-// Middleware which is needed for all the API to read Body
-// This helps to convert all the json to javascript objects
-
 app.use(cors({
-    origin:"https://devtinder-web-wrqj.onrender.com",
+    origin:"http://localhost:5173",
     credentials:true,
 }))
 app.use(express.json())
